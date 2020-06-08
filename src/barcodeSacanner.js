@@ -16,23 +16,30 @@ export default class barcodeScanner extends Component {
 
     this.state = {
       torchOn: false,
+      barcode: '',
     };
   }
 
   onBarCodeRead = (e) => {
-    Alert.alert('Barcode value is' + e.data, 'Barcode type is' + e.type);
+    this.setState({barcode: e.data});
+    Alert.alert(`barcode: ${e.data} type ${e.type}`);
   };
 
   render() {
     return (
       <View style={styles.container}>
         <RNCamera
+          defaultTouchToFocus
+          aspect={1}
+          barCodeTypes={[RNCamera.Constants.BarCodeType.code128]}
+          flashMode={RNCamera.Constants.FlashMode.on}
           captureAudio={false}
+          onBarCodeRead={this.onBarCodeRead}
           style={styles.preview}
-          torchMode={RNCamera.Constants.FlashMode.off}
-          onBarCodeRed={this.onBarCodeRead}
           ref={(cam) => (this.camera = cam)}>
-          <Text style={{backgroundColor: 'white'}}>BARCODE SCANNER</Text>
+          <Text style={{backgroundColor: 'white'}}>
+            BARCODE SCANNER {this.state.barcode}{' '}
+          </Text>
         </RNCamera>
       </View>
     );
